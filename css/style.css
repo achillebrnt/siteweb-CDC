@@ -208,8 +208,6 @@ a { color: inherit; }
 }
 .main-nav a:hover { color: var(--gold-light); }
 .main-nav a:hover::after { right: 0; }
-.main-nav a.is-active { color: var(--gold-light); }
-.main-nav a.is-active::after { right: 0; }
 
 .header-call { margin-left: 1.5rem; flex-shrink: 0; }
 
@@ -658,8 +656,7 @@ a { color: inherit; }
 }
 
 /* ---- Événements ---- */
-.events-hero { background: var(--bg); padding-top: calc(var(--header-h) + 2.5rem); padding-bottom: 1rem; }
-.events { background: var(--bg-alt); padding-top: 1rem; }
+.events { background: var(--bg-alt); }
 
 .events-list { display: flex; flex-direction: column; gap: 1.2rem; max-width: 760px; }
 

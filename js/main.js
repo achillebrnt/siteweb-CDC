@@ -171,3 +171,39 @@ if (!prefersReducedMotion) {
     });
   });
 }
+
+// Événements : chargés depuis data/events.json (géré via admin.html)
+const eventsList = document.getElementById('events-list');
+if (eventsList) {
+  const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+  const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+
+  fetch('data/events.json', { cache: 'no-store' })
+    .then((res) => (res.ok ? res.json() : []))
+    .then((events) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const upcoming = events
+        .filter((ev) => ev.date && new Date(`${ev.date}T00:00:00`) >= today)
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      if (upcoming.length === 0) return;
+
+      eventsList.innerHTML = upcoming.map((ev) => {
+        const d = new Date(`${ev.date}T00:00:00`);
+        return `
+          <article class="event-card reveal is-visible">
+            <div class="event-date"><span class="event-day">${d.getDate()}</span><span class="event-month">${monthNames[d.getMonth()]}</span></div>
+            <div class="event-body">
+              ${ev.tag ? `<span class="event-tag">${escapeHtml(ev.tag)}</span>` : ''}
+              <h3>${escapeHtml(ev.title || '')}</h3>
+              ${ev.description ? `<p>${escapeHtml(ev.description)}</p>` : ''}
+              ${ev.time ? `<span class="event-time">${escapeHtml(ev.time)}</span>` : ''}
+            </div>
+          </article>`;
+      }).join('');
+    })
+    .catch(() => {});
+}

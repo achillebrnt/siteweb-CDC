@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Administration — CDC Café des Caps</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2315110d'/%3E%3Cpath d='M28 28h44l-18 22v20h10v6H36v-6h10V50L28 28z' fill='%23c9a15a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="container admin-wrap">
+  <p class="eyebrow">CDC — Espace privé</p>
+  <h1>Gérer les événements</h1>
+
+  <section id="admin-login" class="admin-card">
+    <h2>Connexion</h2>
+    <p class="admin-help">Colle ton jeton d'accès GitHub ci-dessous. Il reste uniquement sur cet appareil et sert juste à publier les événements.</p>
+
+    <details class="admin-details">
+      <summary>Comment créer ce jeton (une seule fois) ?</summary>
+      <ol>
+        <li>Sur GitHub.com, connecte-toi, puis va dans <strong>Settings</strong> (ta photo de profil, en haut à droite).</li>
+        <li>Tout en bas du menu de gauche → <strong>Developer settings</strong>.</li>
+        <li><strong>Personal access tokens</strong> → <strong>Fine-grained tokens</strong> → <strong>Generate new token</strong>.</li>
+        <li>Donne-lui un nom (ex : « Admin CDC »).</li>
+        <li><strong>Repository access</strong> → <strong>Only select repositories</strong> → choisis <strong>siteweb-CDC</strong>.</li>
+        <li><strong>Permissions</strong> → <strong>Repository permissions</strong> → <strong>Contents</strong> → <strong>Read and write</strong>.</li>
+        <li><strong>Generate token</strong>, copie-le (il commence par <code>github_pat_</code>) et colle-le ci-dessous. Ne le partage à personne.</li>
+      </ol>
+    </details>
+
+    <form id="login-form">
+      <input type="password" id="token-input" placeholder="github_pat_..." autocomplete="off" required>
+      <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+    <p id="login-error" class="admin-error" hidden></p>
+  </section>
+
+  <section id="admin-panel" class="admin-card" hidden>
+    <div class="admin-panel-head">
+      <h2>Nouvel événement</h2>
+      <button id="logout-btn" class="btn btn-ghost" type="button">Déconnexion</button>
+    </div>
+
+    <form id="event-form">
+      <label>Date
+        <input type="date" id="ev-date" required>
+      </label>
+      <label>Heure
+        <input type="text" id="ev-time" placeholder="Ex : 20h">
+      </label>
+      <label>Catégorie
+        <input type="text" id="ev-tag" placeholder="Ex : Soirée à thème">
+      </label>
+      <label>Titre
+        <input type="text" id="ev-title" required>
+      </label>
+      <label>Description
+        <textarea id="ev-desc" rows="3" placeholder="Courte description (facultatif)"></textarea>
+      </label>
+      <button type="submit" class="btn btn-primary">Publier l'événement</button>
+    </form>
+    <p id="event-status" hidden></p>
+
+    <h2 class="admin-list-title">Événements publiés</h2>
+    <div id="admin-events-list" class="admin-events-list"></div>
+  </section>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
