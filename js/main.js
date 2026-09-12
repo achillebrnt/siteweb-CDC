@@ -14,11 +14,26 @@ navToggle.addEventListener('click', () => {
   navToggle.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
 });
 
-mainNav.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => {
-    mainNav.classList.remove('is-open');
-    navToggle.setAttribute('aria-expanded', 'false');
-    navToggle.setAttribute('aria-label', 'Ouvrir le menu');
+// Défilement fluide vers les ancres internes, décalé pour ne pas passer sous le header fixe
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    const id = link.getAttribute('href');
+    if (!id || id.length < 2) return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+
+    if (mainNav.classList.contains('is-open')) {
+      mainNav.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Ouvrir le menu');
+    }
+
+    const top = target.getBoundingClientRect().top + window.scrollY - header.offsetHeight - 16;
+    window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    history.pushState(null, '', id);
   });
 });
 
