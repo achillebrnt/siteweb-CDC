@@ -49,7 +49,7 @@
 }
 </script>
 </head>
-<body>
+<body class="is-loading">
 
 <div class="scroll-progress" id="scroll-progress"></div>
 
@@ -83,7 +83,7 @@
     <div class="hero-overlay"></div>
     <div class="container hero-content">
       <p class="eyebrow reveal">Bienvenue au</p>
-      <h1 class="reveal">CDC <span class="hero-sub">Café des Caps</span></h1>
+      <h1 class="reveal"><span class="hero-letters" id="hero-letters">CDC</span> <span class="hero-sub">Café des Caps</span></h1>
       <p class="hero-tagline reveal">Cocktails signature, large choix de bières pression et ambiance conviviale, au cœur de Bordeaux.</p>
       <p class="rating-badge reveal">★★★★★ <strong>4,9/5</strong> · 145 avis Google</p>
       <div class="hero-actions reveal">
@@ -150,13 +150,15 @@
 
   <!-- Bandeau note Google -->
   <section class="stat-band">
+    <svg class="curve curve-top" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,60 C240,10 480,10 720,35 C960,60 1200,55 1440,8 L1440,60 Z" fill="#c9a15a"></path></svg>
     <div class="container stat-band-inner reveal">
-      <div class="stat-number">4,9<span>/5</span></div>
+      <div class="stat-number"><span id="stat-count">0,0</span><span>/5</span></div>
       <div class="stat-text">
         <div class="stat-stars">★★★★★</div>
         <p>145 avis Google — merci à tous ceux qui font vivre le CDC.</p>
       </div>
     </div>
+    <svg class="curve curve-bottom" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C240,50 480,50 720,25 C960,0 1200,5 1440,52 L1440,0 Z" fill="#c9a15a"></path></svg>
   </section>
 
   <!-- Carte / Menu -->
@@ -169,7 +171,7 @@
 
       <div class="menu-grid">
         <div class="menu-category reveal">
-          <h3>Cocktails</h3>
+          <h3><svg class="menu-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16l-7 8v7h4v1H7v-1h4v-7L4 4z" stroke-linejoin="round" stroke-linecap="round"/></svg>Cocktails</h3>
 
           <p class="menu-subtitle">8 €</p>
           <ul class="menu-list">
@@ -209,7 +211,7 @@
         </div>
 
         <div class="menu-category reveal">
-          <h3>Bières pression</h3>
+          <h3><svg class="menu-cat-icon menu-cat-icon-beer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 8h9v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8z"/><path d="M15 10h1.5a2.5 2.5 0 0 1 0 5H15"/><path d="M8 5V4M11 5V3M14 5V4" stroke-linecap="round"/></svg>Bières pression</h3>
           <table class="beer-table">
             <thead>
               <tr><th>&nbsp;</th><th>25cl</th><th>50cl</th><th>1L</th></tr>
@@ -250,23 +252,29 @@
       <p class="section-intro reveal">Un aperçu de l'ambiance du CDC — cliquez pour agrandir.</p>
 
       <div class="gallery-grid">
-        <button class="gallery-tile gallery-tile-big reveal" data-index="0" aria-label="Agrandir la photo">
+        <button class="gallery-tile gallery-tile-big reveal" data-index="0" aria-label="Agrandir la photo : Le comptoir">
           <img src="images/galerie/galerie-1.jpg" alt="Le comptoir et le mur de bouteilles illuminé du CDC" loading="lazy">
+          <span class="gallery-caption">Le comptoir</span>
         </button>
-        <button class="gallery-tile reveal" data-index="1" aria-label="Agrandir la photo">
+        <button class="gallery-tile reveal" data-index="1" aria-label="Agrandir la photo : À la pression">
           <img src="images/galerie/galerie-2.jpg" alt="Le barman du CDC tire une bière pression" loading="lazy">
+          <span class="gallery-caption">À la pression</span>
         </button>
-        <button class="gallery-tile reveal" data-index="2" aria-label="Agrandir la photo">
+        <button class="gallery-tile reveal" data-index="2" aria-label="Agrandir la photo : Cocktails maison">
           <img src="images/galerie/galerie-4.jpg" alt="Une sélection de cocktails maison alignés sur le bar" loading="lazy">
+          <span class="gallery-caption">Cocktails maison</span>
         </button>
-        <button class="gallery-tile reveal" data-index="3" aria-label="Agrandir la photo">
+        <button class="gallery-tile reveal" data-index="3" aria-label="Agrandir la photo : Spiritueux premium">
           <img src="images/galerie/galerie-5.jpg" alt="Vitrine de spiritueux premium du CDC" loading="lazy">
+          <span class="gallery-caption">Spiritueux premium</span>
         </button>
-        <button class="gallery-tile gallery-tile-wide reveal" data-index="4" aria-label="Agrandir la photo">
+        <button class="gallery-tile gallery-tile-wide reveal" data-index="4" aria-label="Agrandir la photo : Ambiance du soir">
           <img src="images/galerie/galerie-3.jpg" alt="Ambiance conviviale au bar CDC, un soir de forte affluence" loading="lazy">
+          <span class="gallery-caption">Ambiance du soir</span>
         </button>
-        <button class="gallery-tile reveal" data-index="5" aria-label="Agrandir la photo">
+        <button class="gallery-tile reveal" data-index="5" aria-label="Agrandir la photo : L'enseigne CDC">
           <img src="images/galerie/galerie-6.jpg" alt="Enseigne lumineuse CDC Café des Caps au plafond du bar" loading="lazy">
+          <span class="gallery-caption">L'enseigne CDC</span>
         </button>
       </div>
     </div>
@@ -324,7 +332,16 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
+    <div class="divider footer-divider" aria-hidden="true"><span></span><i></i><span></span></div>
     <p class="footer-logo">CDC <span>Café des Caps</span></p>
+    <div class="social-links footer-social">
+      <a href="https://www.instagram.com/cdc_bar/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61588476899732" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 8h2V4h-2a5 5 0 0 0-5 5v2H8v4h2v6h4v-6h3l1-4h-4V9a1 1 0 0 1 1-1z"/></svg>
+      </a>
+    </div>
     <p>© <span id="year"></span> CDC - Café des Caps — 103 Rue Lucien Faure, 33300 Bordeaux — Tous droits réservés.</p>
   </div>
 </footer>

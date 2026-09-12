@@ -8,6 +8,8 @@
   --text: #f5efe6;
   --text-muted: #b7a897;
   --border: rgba(201, 161, 90, 0.22);
+  --teal: #3a9188;
+  --teal-light: #6cbdb3;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --header-h: 76px;
@@ -24,7 +26,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   position: relative;
+  transition: opacity .6s ease;
 }
+body.is-loading { opacity: 0; }
 
 /* Léger grain (façon cuir/bois) pour rappeler la charte de la carte du bar */
 body::before {
@@ -278,6 +282,16 @@ a { color: inherit; }
   letter-spacing: .03em;
   text-shadow: 0 4px 30px rgba(0,0,0,.35);
 }
+.hero-letters { display: inline-block; }
+.hero-letters .letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(.5em);
+  animation: letter-in .7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes letter-in {
+  to { opacity: 1; transform: translateY(0); }
+}
 .hero-sub {
   display: block;
   font-size: clamp(1rem, 2.4vw, 1.3rem);
@@ -399,9 +413,13 @@ a { color: inherit; }
 
 /* ---- Stat band ---- */
 .stat-band {
+  position: relative;
   padding: 3.5rem 0;
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
 }
+.curve { position: absolute; left: 0; width: 100%; height: 44px; display: block; line-height: 0; }
+.curve-top { top: -43px; }
+.curve-bottom { bottom: -43px; }
 .stat-band-inner {
   display: flex;
   align-items: center;
@@ -428,11 +446,16 @@ a { color: inherit; }
   gap: 2.5rem 3.5rem;
 }
 .menu-category h3 {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
   font-size: 1.3rem;
   border-bottom: 1px solid var(--border);
   padding-bottom: .6rem;
   margin-bottom: 1.2rem;
 }
+.menu-cat-icon { width: 22px; height: 22px; color: var(--gold); flex-shrink: 0; }
+.menu-cat-icon-beer { color: var(--teal-light); }
 .menu-list { list-style: none; margin: 0 0 1.4rem; padding: 0; }
 .menu-list li {
   display: flex;
@@ -530,21 +553,29 @@ a { color: inherit; }
   transition: transform .5s ease;
 }
 .gallery-tile:hover img { transform: scale(1.08); }
-.gallery-tile::after {
-  content: "+";
+.gallery-tile::before {
+  content: "";
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: 300;
-  color: #fff;
-  background: rgba(21,17,13,0);
+  background: linear-gradient(0deg, rgba(21,17,13,.75) 0%, rgba(21,17,13,0) 55%);
   opacity: 0;
-  transition: opacity .3s ease, background .3s ease;
+  transition: opacity .3s ease;
 }
-.gallery-tile:hover::after { opacity: 1; background: rgba(21,17,13,.35); }
+.gallery-tile:hover::before { opacity: 1; }
+.gallery-caption {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  color: var(--gold-light);
+  font-size: .9rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.gallery-tile:hover .gallery-caption { opacity: 1; transform: translateY(0); }
 
 /* ---- Lightbox ---- */
 .lightbox {
@@ -633,8 +664,10 @@ a { color: inherit; }
   color: var(--text-muted);
   font-size: .85rem;
 }
-.footer-logo { font-family: var(--font-display); font-size: 1.2rem; color: var(--gold-light); margin: 0 0 .7rem; }
+.footer-divider { justify-content: center; margin: 0 0 1.6rem; }
+.footer-logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold-light); margin: 0 0 1rem; }
 .footer-logo span { font-family: var(--font-body); font-size: .62rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin-left: .6rem; }
+.footer-social { justify-content: center; margin: 0 0 1.6rem; }
 .footer-inner p:last-child { margin: .3em 0 0; }
 
 /* ---- Mobile sticky CTA ---- */

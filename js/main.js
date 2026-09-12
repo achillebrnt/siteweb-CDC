@@ -1,5 +1,17 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+requestAnimationFrame(() => document.body.classList.remove('is-loading'));
+
+// Titre du hero lettre par lettre
+const heroLetters = document.getElementById('hero-letters');
+if (heroLetters) {
+  const text = heroLetters.textContent;
+  heroLetters.innerHTML = text
+    .split('')
+    .map((ch, i) => `<span class="letter" style="animation-delay:${300 + i * 60}ms">${ch === ' ' ? '&nbsp;' : ch}</span>`)
+    .join('');
+}
+
 const header = document.getElementById('site-header');
 const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 10);
 onScroll();
@@ -117,3 +129,45 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') showRelative(-1);
   if (e.key === 'ArrowRight') showRelative(1);
 });
+
+// Compteur animé pour la note Google
+const statCount = document.getElementById('stat-count');
+const statBand = document.querySelector('.stat-band');
+if (statCount && statBand && !prefersReducedMotion) {
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      statObserver.unobserve(entry.target);
+      const duration = 1200;
+      const targetValue = 4.9;
+      const start = performance.now();
+      function tick(now) {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        statCount.textContent = (targetValue * eased).toFixed(1).replace('.', ',');
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.4 });
+  statObserver.observe(statBand);
+} else if (statCount) {
+  statCount.textContent = '4,9';
+}
+
+// Effet magnétique léger sur les boutons principaux
+if (!prefersReducedMotion) {
+  document.querySelectorAll('.btn-primary, .btn-outline').forEach((btn) => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transition = 'transform .05s linear';
+      btn.style.transform = `translate(${x * 0.18}px, ${y * 0.35}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transition = 'transform .35s cubic-bezier(.2,.9,.3,1.3)';
+      btn.style.transform = 'translate(0, 0)';
+    });
+  });
+}
