@@ -473,6 +473,28 @@ a { color: inherit; }
 .menu-dots { flex: 1; border-bottom: 1px dotted var(--border); transform: translateY(-4px); }
 .menu-price { color: var(--gold-light); font-weight: 600; white-space: nowrap; }
 
+.menu-list li > details { flex: 1; }
+.menu-list summary {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  cursor: pointer;
+  list-style: none;
+}
+.menu-list summary::-webkit-details-marker { display: none; }
+.menu-list summary::after {
+  content: "+";
+  flex-shrink: 0;
+  width: 1em;
+  text-align: center;
+  color: var(--gold);
+  font-weight: 700;
+}
+.menu-list details[open] summary::after { content: "–"; }
+.menu-item-desc { margin: .5rem 0 0; padding-right: 1.4rem; font-size: .85rem; line-height: 1.5; color: var(--text-muted); }
+
+.beer-abv { font-size: .72rem; font-weight: 500; color: var(--text-muted); margin-left: .35em; white-space: nowrap; }
+
 .menu-subtitle { color: var(--gold); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 .3rem; }
 
 .menu-highlight {
