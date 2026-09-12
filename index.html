@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CDC — Café des Caps | Bar à Bordeaux</title>
 <meta name="description" content="CDC - Café des Caps : bar à cocktails et bières pression au cœur de Bordeaux. Cocktails signature, large choix de bières, petite restauration. Noté 4,9/5 sur Google.">
+<meta property="og:type" content="business.business">
+<meta property="og:title" content="CDC — Café des Caps | Bar à Bordeaux">
+<meta property="og:description" content="Cocktails signature, large choix de bières pression et ambiance conviviale, au cœur de Bordeaux. Noté 4,9/5 sur Google (145 avis).">
+<meta property="og:image" content="images/galerie/galerie-6.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2315110d'/%3E%3Cpath d='M28 28h44l-18 22v20h10v6H36v-6h10V50L28 28z' fill='%23c9a15a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
 {
@@ -47,6 +51,8 @@
 </head>
 <body>
 
+<div class="scroll-progress" id="scroll-progress"></div>
+
 <a class="skip-link" href="#contenu">Aller au contenu</a>
 
 <header class="site-header" id="site-header">
@@ -73,13 +79,14 @@
 
   <!-- Hero -->
   <section id="accueil" class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-overlay"></div>
     <div class="container hero-content">
-      <p class="eyebrow">Bienvenue au</p>
-      <h1>CDC <span class="hero-sub">Café des Caps</span></h1>
-      <p class="hero-tagline">Cocktails signature, large choix de bières pression et ambiance conviviale, au cœur de Bordeaux.</p>
-      <p class="rating-badge">★★★★★ <strong>4,9/5</strong> · 145 avis Google</p>
-      <div class="hero-actions">
+      <p class="eyebrow reveal">Bienvenue au</p>
+      <h1 class="reveal">CDC <span class="hero-sub">Café des Caps</span></h1>
+      <p class="hero-tagline reveal">Cocktails signature, large choix de bières pression et ambiance conviviale, au cœur de Bordeaux.</p>
+      <p class="rating-badge reveal">★★★★★ <strong>4,9/5</strong> · 145 avis Google</p>
+      <div class="hero-actions reveal">
         <a href="#carte" class="btn btn-primary">Voir la carte</a>
         <a href="https://www.google.com/maps/search/?api=1&query=CDC+Caf%C3%A9+des+Caps+103+Rue+Lucien+Faure+33300+Bordeaux" class="btn btn-outline" target="_blank" rel="noopener">Itinéraire</a>
       </div>
@@ -87,35 +94,67 @@
     <a href="#apropos" class="scroll-cue" aria-label="Découvrir la suite">↓</a>
   </section>
 
+  <!-- Marquee -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Cocktails signature</span><span class="marquee-dot">✦</span>
+      <span>9 bières pression</span><span class="marquee-dot">✦</span>
+      <span>★ 4,9/5 sur Google</span><span class="marquee-dot">✦</span>
+      <span>Ouvert mer.–sam. dès 16h</span><span class="marquee-dot">✦</span>
+      <span>Bordeaux</span><span class="marquee-dot">✦</span>
+      <span>Cocktails signature</span><span class="marquee-dot">✦</span>
+      <span>9 bières pression</span><span class="marquee-dot">✦</span>
+      <span>★ 4,9/5 sur Google</span><span class="marquee-dot">✦</span>
+      <span>Ouvert mer.–sam. dès 16h</span><span class="marquee-dot">✦</span>
+      <span>Bordeaux</span><span class="marquee-dot">✦</span>
+    </div>
+  </div>
+
   <!-- À propos / ambiance -->
   <section id="apropos" class="about">
-    <div class="container">
-      <p class="eyebrow">L'ambiance</p>
-      <h2>Un repaire chaleureux au cœur de Bordeaux</h2>
-      <p class="section-intro">Lumières chaleureuses, mur de bouteilles et bonne humeur : le CDC est pensé pour les soirées entre amis, un verre après le travail ou une virée cocktails qui se prolonge tard.</p>
+    <div class="container about-grid">
+      <div class="about-media reveal">
+        <img src="images/galerie/about.jpg" alt="Mur de bouteilles illuminé et clientèle au CDC" loading="lazy">
+      </div>
+      <div class="about-content">
+        <p class="eyebrow reveal">L'ambiance</p>
+        <h2 class="reveal">Un repaire chaleureux au cœur de Bordeaux</h2>
+        <p class="section-intro reveal">Lumières chaleureuses, mur de bouteilles et bonne humeur : le CDC est pensé pour les soirées entre amis, un verre après le travail ou une virée cocktails qui se prolonge tard.</p>
 
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 10h28l-12 16v14h8v4H14v-4h8V26L10 10z" stroke-linejoin="round" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Cocktails signature</h3>
-          <p>Classiques revisités et créations maison, du Mojito au Pornstar Martini — ou un cocktail composé avec notre barman.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 20h16v16a4 4 0 0 1-4 4h-8a4 4 0 0 1-4-4V20z" stroke-linejoin="round"/><path d="M30 22h3a4 4 0 0 1 0 8h-3" /><path d="M18 14v-3M22 14v-4M26 14v-3" stroke-linecap="round"/></svg>
-          </div>
-          <h3>9 bières pression</h3>
-          <p>Un large choix de bières à la pression en 25cl, 50cl ou 1L, sans alcool et bouteilles également disponibles.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="24" r="16"/><path d="M24 15v9l6 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Ouvert tard</h3>
-          <p>Petite restauration sur place et service jusqu'à tard dans la nuit.</p>
-        </div>
+        <ul class="feature-list">
+          <li class="reveal">
+            <span class="feature-num">01</span>
+            <div>
+              <h3>Cocktails signature</h3>
+              <p>Classiques revisités et créations maison, du Mojito au Pornstar Martini — ou un cocktail composé avec notre barman.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span class="feature-num">02</span>
+            <div>
+              <h3>9 bières pression</h3>
+              <p>Un large choix de bières à la pression en 25cl, 50cl ou 1L, sans alcool et bouteilles également disponibles.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span class="feature-num">03</span>
+            <div>
+              <h3>Ouvert tard</h3>
+              <p>Petite restauration sur place et service jusqu'à tard dans la nuit.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bandeau note Google -->
+  <section class="stat-band">
+    <div class="container stat-band-inner reveal">
+      <div class="stat-number">4,9<span>/5</span></div>
+      <div class="stat-text">
+        <div class="stat-stars">★★★★★</div>
+        <p>145 avis Google — merci à tous ceux qui font vivre le CDC.</p>
       </div>
     </div>
   </section>
@@ -123,12 +162,13 @@
   <!-- Carte / Menu -->
   <section id="carte" class="menu">
     <div class="container">
-      <p class="eyebrow">Dégustation</p>
-      <h2>La carte</h2>
-      <p class="section-intro">Notre sélection de cocktails et bières pression.</p>
+      <p class="eyebrow reveal">Dégustation</p>
+      <h2 class="reveal">La carte</h2>
+      <div class="divider reveal" aria-hidden="true"><span></span><i></i><span></span></div>
+      <p class="section-intro reveal">Notre sélection de cocktails et bières pression.</p>
 
       <div class="menu-grid">
-        <div class="menu-category">
+        <div class="menu-category reveal">
           <h3>Cocktails</h3>
 
           <p class="menu-subtitle">8 €</p>
@@ -168,7 +208,7 @@
           </div>
         </div>
 
-        <div class="menu-category">
+        <div class="menu-category reveal">
           <h3>Bières pression</h3>
           <table class="beer-table">
             <thead>
@@ -204,29 +244,30 @@
   <!-- Galerie -->
   <section id="galerie" class="gallery">
     <div class="container">
-      <p class="eyebrow">En images</p>
-      <h2>Galerie</h2>
-      <p class="section-intro">Un aperçu de l'ambiance du CDC.</p>
+      <p class="eyebrow reveal">En images</p>
+      <h2 class="reveal">Galerie</h2>
+      <div class="divider reveal" aria-hidden="true"><span></span><i></i><span></span></div>
+      <p class="section-intro reveal">Un aperçu de l'ambiance du CDC — cliquez pour agrandir.</p>
 
       <div class="gallery-grid">
-        <figure class="gallery-tile">
+        <button class="gallery-tile gallery-tile-big reveal" data-index="0" aria-label="Agrandir la photo">
           <img src="images/galerie/galerie-1.jpg" alt="Le comptoir et le mur de bouteilles illuminé du CDC" loading="lazy">
-        </figure>
-        <figure class="gallery-tile">
+        </button>
+        <button class="gallery-tile reveal" data-index="1" aria-label="Agrandir la photo">
           <img src="images/galerie/galerie-2.jpg" alt="Le barman du CDC tire une bière pression" loading="lazy">
-        </figure>
-        <figure class="gallery-tile">
-          <img src="images/galerie/galerie-3.jpg" alt="Ambiance conviviale au bar CDC, un soir de forte affluence" loading="lazy">
-        </figure>
-        <figure class="gallery-tile">
+        </button>
+        <button class="gallery-tile reveal" data-index="2" aria-label="Agrandir la photo">
           <img src="images/galerie/galerie-4.jpg" alt="Une sélection de cocktails maison alignés sur le bar" loading="lazy">
-        </figure>
-        <figure class="gallery-tile">
+        </button>
+        <button class="gallery-tile reveal" data-index="3" aria-label="Agrandir la photo">
           <img src="images/galerie/galerie-5.jpg" alt="Vitrine de spiritueux premium du CDC" loading="lazy">
-        </figure>
-        <figure class="gallery-tile">
+        </button>
+        <button class="gallery-tile gallery-tile-wide reveal" data-index="4" aria-label="Agrandir la photo">
+          <img src="images/galerie/galerie-3.jpg" alt="Ambiance conviviale au bar CDC, un soir de forte affluence" loading="lazy">
+        </button>
+        <button class="gallery-tile reveal" data-index="5" aria-label="Agrandir la photo">
           <img src="images/galerie/galerie-6.jpg" alt="Enseigne lumineuse CDC Café des Caps au plafond du bar" loading="lazy">
-        </figure>
+        </button>
       </div>
     </div>
   </section>
@@ -234,7 +275,7 @@
   <!-- Contact / Localisation -->
   <section id="contact" class="location">
     <div class="container location-grid">
-      <div class="location-info">
+      <div class="location-info reveal">
         <p class="eyebrow">Nous trouver</p>
         <h2>Infos pratiques</h2>
 
@@ -267,7 +308,7 @@
         </div>
       </div>
 
-      <div class="location-map">
+      <div class="location-map reveal">
         <iframe
           src="https://www.google.com/maps?q=103+Rue+Lucien+Faure,+33300+Bordeaux&output=embed"
           width="100%" height="100%" style="border:0; min-height:320px;"
@@ -283,9 +324,22 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <p>© <span id="year"></span> CDC - Café des Caps — Tous droits réservés.</p>
+    <p class="footer-logo">CDC <span>Café des Caps</span></p>
+    <p>© <span id="year"></span> CDC - Café des Caps — 103 Rue Lucien Faure, 33300 Bordeaux — Tous droits réservés.</p>
   </div>
 </footer>
+
+<div class="mobile-cta">
+  <a href="tel:+33605861188" class="mobile-cta-btn">Appeler</a>
+  <a href="https://www.google.com/maps/search/?api=1&query=CDC+Caf%C3%A9+des+Caps+103+Rue+Lucien+Faure+33300+Bordeaux" target="_blank" rel="noopener" class="mobile-cta-btn mobile-cta-primary">Itinéraire</a>
+</div>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Fermer">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Photo précédente">‹</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Photo suivante">›</button>
+</div>
 
 <script src="js/main.js"></script>
 </body>
