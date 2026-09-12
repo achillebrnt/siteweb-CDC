@@ -3,13 +3,13 @@
   --bg: #15110d;
   --bg-alt: #1e1712;
   --card: #241c16;
-  --gold: #c9a15a;
-  --gold-light: #e3c98f;
+  --gold: #dba421;
+  --gold-light: #f7cf4c;
   --text: #f5efe6;
   --text-muted: #b7a897;
-  --border: rgba(201, 161, 90, 0.22);
-  --teal: #3a9188;
-  --teal-light: #6cbdb3;
+  --border: rgba(219, 164, 33, 0.25);
+  --teal: #12a394;
+  --teal-light: #4fe0cb;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --header-h: 76px;
