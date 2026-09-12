@@ -80,55 +80,57 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
-// Lightbox gallery
+// Lightbox gallery (uniquement présent sur galerie.html)
 const galleryTiles = Array.from(document.querySelectorAll('.gallery-tile'));
 const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightbox-img');
-const lightboxClose = document.getElementById('lightbox-close');
-const lightboxPrev = document.getElementById('lightbox-prev');
-const lightboxNext = document.getElementById('lightbox-next');
-let currentIndex = 0;
-let lastFocused = null;
+if (lightbox) {
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxClose = document.getElementById('lightbox-close');
+  const lightboxPrev = document.getElementById('lightbox-prev');
+  const lightboxNext = document.getElementById('lightbox-next');
+  let currentIndex = 0;
+  let lastFocused = null;
 
-function openLightbox(index) {
-  currentIndex = index;
-  const img = galleryTiles[currentIndex].querySelector('img');
-  lightboxImg.src = img.src;
-  lightboxImg.alt = img.alt;
-  lastFocused = document.activeElement;
-  lightbox.classList.add('is-open');
-  lightbox.setAttribute('aria-hidden', 'false');
-  lightboxClose.focus();
-  document.body.style.overflow = 'hidden';
+  const openLightbox = (index) => {
+    currentIndex = index;
+    const img = galleryTiles[currentIndex].querySelector('img');
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lastFocused = document.activeElement;
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    lightboxClose.focus();
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused) lastFocused.focus();
+  };
+
+  const showRelative = (offset) => {
+    currentIndex = (currentIndex + offset + galleryTiles.length) % galleryTiles.length;
+    const img = galleryTiles[currentIndex].querySelector('img');
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+  };
+
+  galleryTiles.forEach((tile, index) => {
+    tile.addEventListener('click', () => openLightbox(index));
+  });
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxPrev.addEventListener('click', () => showRelative(-1));
+  lightboxNext.addEventListener('click', () => showRelative(1));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showRelative(-1);
+    if (e.key === 'ArrowRight') showRelative(1);
+  });
 }
-
-function closeLightbox() {
-  lightbox.classList.remove('is-open');
-  lightbox.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-  if (lastFocused) lastFocused.focus();
-}
-
-function showRelative(offset) {
-  currentIndex = (currentIndex + offset + galleryTiles.length) % galleryTiles.length;
-  const img = galleryTiles[currentIndex].querySelector('img');
-  lightboxImg.src = img.src;
-  lightboxImg.alt = img.alt;
-}
-
-galleryTiles.forEach((tile, index) => {
-  tile.addEventListener('click', () => openLightbox(index));
-});
-lightboxClose.addEventListener('click', closeLightbox);
-lightboxPrev.addEventListener('click', () => showRelative(-1));
-lightboxNext.addEventListener('click', () => showRelative(1));
-lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-document.addEventListener('keydown', (e) => {
-  if (!lightbox.classList.contains('is-open')) return;
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') showRelative(-1);
-  if (e.key === 'ArrowRight') showRelative(1);
-});
 
 // Compteur animé pour la note Google
 const statCount = document.getElementById('stat-count');

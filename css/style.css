@@ -84,6 +84,7 @@ h1, h2, h3 {
 }
 
 section { padding: 5.5rem 0; }
+.page-hero-section { padding-top: calc(var(--header-h) + 3rem); }
 
 a { color: inherit; }
 
