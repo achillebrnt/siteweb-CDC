@@ -32,13 +32,13 @@ let currentEvents = [];
 
 const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 const CATEGORY_COLORS = {
-  'Soirée à thème': 'var(--gold)',
-  'Concert / Live': 'var(--teal)',
-  'DJ Set': '#d6588f',
-  'Happy Hour': '#e2733f',
-  'Spécial': '#9b7fd4',
+  'Soirée à thème': '#d49653',
+  'Concert / Live': '#8a5a3b',
+  'DJ Set': '#6e7358',
+  'Happy Hour': '#b5643f',
+  'Spécial': '#7a5566',
 };
-const DEFAULT_CATEGORY_COLOR = '#8a7a68';
+const DEFAULT_CATEGORY_COLOR = '#978e81';
 
 function utf8ToBase64(str) {
   return btoa(unescape(encodeURIComponent(str)));

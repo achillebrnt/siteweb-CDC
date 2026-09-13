@@ -1,7 +1,5 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-requestAnimationFrame(() => document.body.classList.remove('is-loading'));
-
 const header = document.getElementById('site-header');
 const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 10);
 onScroll();
@@ -12,6 +10,7 @@ const mainNav = document.getElementById('main-nav');
 
 navToggle.addEventListener('click', () => {
   const isOpen = mainNav.classList.toggle('is-open');
+  header.classList.toggle('is-nav-open', isOpen);
   navToggle.setAttribute('aria-expanded', String(isOpen));
   navToggle.setAttribute('aria-label', isOpen ? 'Fermer le menu' : 'Ouvrir le menu');
 });
@@ -29,6 +28,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 
     if (mainNav.classList.contains('is-open')) {
       mainNav.classList.remove('is-open');
+      header.classList.remove('is-nav-open');
       navToggle.setAttribute('aria-expanded', 'false');
       navToggle.setAttribute('aria-label', 'Ouvrir le menu');
     }
@@ -38,37 +38,6 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     history.pushState(null, '', id);
   });
 });
-
-// Scroll progress bar
-const progressBar = document.getElementById('scroll-progress');
-const updateProgress = () => {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
-  progressBar.style.width = `${Math.min(100, Math.max(0, ratio * 100))}%`;
-};
-updateProgress();
-window.addEventListener('scroll', updateProgress, { passive: true });
-window.addEventListener('resize', updateProgress);
-
-// Reveal on scroll, staggered per parent group
-const revealGroups = new Map();
-document.querySelectorAll('.reveal').forEach((el) => {
-  const parent = el.parentElement;
-  const index = revealGroups.get(parent) || 0;
-  el.style.transitionDelay = `${Math.min(index, 5) * 80}ms`;
-  revealGroups.set(parent, index + 1);
-});
-
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
 // Lightbox gallery (uniquement présent sur galerie.html)
 const galleryTiles = Array.from(document.querySelectorAll('.gallery-tile'));
@@ -134,13 +103,13 @@ if (eventsList) {
 
   const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
   const CATEGORY_COLORS = {
-    'Soirée à thème': 'var(--gold)',
-    'Concert / Live': 'var(--teal)',
-    'DJ Set': '#d6588f',
-    'Happy Hour': '#e2733f',
-    'Spécial': '#9b7fd4',
+    'Soirée à thème': '#d49653',
+    'Concert / Live': '#8a5a3b',
+    'DJ Set': '#6e7358',
+    'Happy Hour': '#b5643f',
+    'Spécial': '#7a5566',
   };
-  const DEFAULT_CATEGORY_COLOR = '#8a7a68';
+  const DEFAULT_CATEGORY_COLOR = '#978e81';
   const PLACEHOLDER_ICON = '<svg class="event-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h12l-1.4 15.2a1.6 1.6 0 0 1-1.6 1.4H9a1.6 1.6 0 0 1-1.6-1.4L6 4z" stroke-linejoin="round" stroke-linecap="round"/><path d="M7.3 10.5h9.4" stroke-linecap="round"/></svg>';
   const emptyStateHtml = eventsList.innerHTML;
 
@@ -194,13 +163,13 @@ if (eventsList) {
           ? `<img src="${escapeHtml(ev.photo)}" alt="${escapeHtml(ev.title || '')}" loading="lazy">`
           : `<div class="event-media-placeholder"><span class="event-placeholder-mark">CDC</span>${PLACEHOLDER_ICON}</div>`;
         return `
-          <article class="event-card reveal is-visible" style="--accent:${accent}">
-            <div class="event-media">
-              ${media}
-              ${ev.tag ? `<span class="event-tag">${escapeHtml(ev.tag)}</span>` : ''}
-              ${index === 0 ? '<span class="event-featured-label">Bientôt</span>' : ''}
-            </div>
+          <article class="event-card" style="--accent:${accent}">
+            <div class="event-media">${media}</div>
             <div class="event-body">
+              <div class="event-label-row">
+                ${ev.tag ? `<span class="event-tag">${escapeHtml(ev.tag)}</span>` : '<span></span>'}
+                ${index === 0 ? '<span class="event-featured-label">Bientôt</span>' : ''}
+              </div>
               <p class="event-meta">${meta}</p>
               <h3>${escapeHtml(ev.title || '')}</h3>
               ${ev.description ? `<p class="event-desc">${escapeHtml(ev.description)}</p>` : ''}
