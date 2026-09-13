@@ -178,6 +178,16 @@ if (!prefersReducedMotion) {
 const eventsList = document.getElementById('events-list');
 if (eventsList) {
   const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+  const CATEGORY_COLORS = {
+    'Soirée à thème': 'var(--gold)',
+    'Concert / Live': 'var(--teal)',
+    'DJ Set': '#d6588f',
+    'Happy Hour': '#e2733f',
+    'Spécial': '#9b7fd4',
+  };
+  const DEFAULT_CATEGORY_COLOR = '#8a7a68';
+  const SPARKLE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>';
+
   const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
@@ -193,16 +203,27 @@ if (eventsList) {
 
       if (upcoming.length === 0) return;
 
-      eventsList.innerHTML = upcoming.map((ev) => {
+      eventsList.innerHTML = upcoming.map((ev, index) => {
         const d = new Date(`${ev.date}T00:00:00`);
+        const accent = CATEGORY_COLORS[ev.tag] || DEFAULT_CATEGORY_COLOR;
+        const isFeatured = index === 0;
+        const media = ev.photo
+          ? `<img src="${escapeHtml(ev.photo)}" alt="${escapeHtml(ev.title || '')}" loading="lazy">`
+          : `<div class="event-media-placeholder">${SPARKLE_ICON}</div>`;
         return `
-          <article class="event-card reveal is-visible">
-            <div class="event-date"><span class="event-day">${d.getDate()}</span><span class="event-month">${monthNames[d.getMonth()]}</span></div>
-            <div class="event-body">
+          <article class="event-card reveal is-visible${isFeatured ? ' event-card-featured' : ''}" style="--accent:${accent}">
+            <div class="event-media">
+              ${media}
               ${ev.tag ? `<span class="event-tag">${escapeHtml(ev.tag)}</span>` : ''}
-              <h3>${escapeHtml(ev.title || '')}</h3>
-              ${ev.description ? `<p>${escapeHtml(ev.description)}</p>` : ''}
-              ${ev.time ? `<span class="event-time">${escapeHtml(ev.time)}</span>` : ''}
+            </div>
+            <div class="event-body">
+              <div class="event-date"><span class="event-day">${d.getDate()}</span><span class="event-month">${monthNames[d.getMonth()]}</span></div>
+              <div class="event-info">
+                ${isFeatured ? '<span class="event-featured-label">Prochain événement</span>' : ''}
+                <h3>${escapeHtml(ev.title || '')}</h3>
+                ${ev.description ? `<p>${escapeHtml(ev.description)}</p>` : ''}
+                ${ev.time ? `<span class="event-time">${escapeHtml(ev.time)}</span>` : ''}
+              </div>
             </div>
           </article>`;
       }).join('');

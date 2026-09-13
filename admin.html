@@ -56,13 +56,23 @@
         <input type="text" id="ev-time" placeholder="Ex : 20h">
       </label>
       <label>Catégorie
-        <input type="text" id="ev-tag" placeholder="Ex : Soirée à thème">
+        <select id="ev-tag">
+          <option value="Soirée à thème">Soirée à thème</option>
+          <option value="Concert / Live">Concert / Live</option>
+          <option value="DJ Set">DJ Set</option>
+          <option value="Happy Hour">Happy Hour</option>
+          <option value="Spécial">Spécial</option>
+          <option value="Autre">Autre</option>
+        </select>
       </label>
       <label>Titre
         <input type="text" id="ev-title" required>
       </label>
       <label>Description
         <textarea id="ev-desc" rows="3" placeholder="Courte description (facultatif)"></textarea>
+      </label>
+      <label>Photo (facultatif)
+        <input type="file" id="ev-photo" accept="image/*">
       </label>
       <button type="submit" class="btn btn-primary">Publier l'événement</button>
     </form>

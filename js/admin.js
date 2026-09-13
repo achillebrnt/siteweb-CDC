@@ -16,6 +16,14 @@ const eventStatus = document.getElementById('event-status');
 const adminEventsList = document.getElementById('admin-events-list');
 
 const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+const CATEGORY_COLORS = {
+  'Soirée à thème': 'var(--gold)',
+  'Concert / Live': 'var(--teal)',
+  'DJ Set': '#d6588f',
+  'Happy Hour': '#e2733f',
+  'Spécial': '#9b7fd4',
+};
+const DEFAULT_CATEGORY_COLOR = '#8a7a68';
 
 function utf8ToBase64(str) {
   return btoa(unescape(encodeURIComponent(str)));
@@ -58,6 +66,64 @@ async function saveEventsFile(token, events, sha, message) {
   return res.json();
 }
 
+function resizeImage(file, maxDim = 1200, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Impossible de lire l'image."));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("Format d'image non pris en charge."));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxDim) { height = Math.round((height * maxDim) / width); width = maxDim; }
+        else if (height > maxDim) { width = Math.round((width * maxDim) / height); height = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadEventPhoto(token, file, eventId) {
+  const base64 = await resizeImage(file);
+  const path = `images/evenements/${eventId}.jpg`;
+  const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: `Ajoute la photo de l'événement ${eventId}`, content: base64, branch: BRANCH }),
+  });
+  if (!res.ok) throw new Error("L'envoi de la photo a échoué.");
+  return path;
+}
+
+async function deleteEventPhoto(token, path) {
+  const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
+  const getRes = await fetch(`${url}?ref=${BRANCH}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+  });
+  if (!getRes.ok) return;
+  const { sha } = await getRes.json();
+  await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: `Supprime la photo ${path}`, sha, branch: BRANCH }),
+  });
+}
+
 function renderAdminEvents(events) {
   const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
   if (sorted.length === 0) {
@@ -66,13 +132,18 @@ function renderAdminEvents(events) {
   }
   adminEventsList.innerHTML = sorted.map((ev) => {
     const d = new Date(`${ev.date}T00:00:00`);
+    const accent = CATEGORY_COLORS[ev.tag] || DEFAULT_CATEGORY_COLOR;
     const meta = [ev.time, ev.tag].filter(Boolean).map(escapeHtml).join(' — ');
+    const thumb = ev.photo
+      ? `<img class="admin-event-thumb" src="${escapeHtml(ev.photo)}" alt="">`
+      : `<span class="admin-event-thumb admin-event-thumb-empty" style="--accent:${accent}"></span>`;
     return `
-      <div class="admin-event-row">
+      <div class="admin-event-row" style="--accent:${accent}">
+        ${thumb}
         <div class="event-date"><span class="event-day">${d.getDate()}</span><span class="event-month">${monthNames[d.getMonth()]}</span></div>
         <div class="admin-event-info">
           <strong>${escapeHtml(ev.title)}</strong>
-          <span>${meta}</span>
+          <span><span class="admin-category-dot"></span>${meta}</span>
         </div>
         <button type="button" class="btn btn-danger admin-delete" data-id="${ev.id}">Supprimer</button>
       </div>`;
@@ -124,8 +195,18 @@ eventForm.addEventListener('submit', async (e) => {
     title: document.getElementById('ev-title').value.trim(),
     description: document.getElementById('ev-desc').value.trim(),
   };
+  const photoFile = document.getElementById('ev-photo').files[0];
 
   try {
+    if (photoFile) {
+      eventStatus.textContent = 'Envoi de la photo...';
+      eventStatus.className = 'admin-status';
+      eventStatus.hidden = false;
+      newEvent.photo = await uploadEventPhoto(token, photoFile, newEvent.id);
+    }
+
+    eventStatus.textContent = 'Publication de l\'événement...';
+    eventStatus.hidden = false;
     const { events, sha } = await fetchEventsFile(token);
     events.push(newEvent);
     await saveEventsFile(token, events, sha, `Ajoute l'événement : ${newEvent.title}`);
@@ -156,6 +237,9 @@ adminEventsList.addEventListener('click', async (e) => {
     const filtered = events.filter((ev) => ev.id !== btn.dataset.id);
     await saveEventsFile(token, filtered, sha, `Supprime l'événement : ${removed ? removed.title : btn.dataset.id}`);
     renderAdminEvents(filtered);
+    if (removed && removed.photo) {
+      deleteEventPhoto(token, removed.photo).catch(() => {});
+    }
   } catch (err) {
     alert(err.message || 'Erreur lors de la suppression.');
     btn.disabled = false;
