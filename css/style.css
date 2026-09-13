@@ -495,6 +495,10 @@ a { color: inherit; }
 
 .beer-abv { font-size: .72rem; font-weight: 500; color: var(--text-muted); margin-left: .35em; white-space: nowrap; }
 
+.menu-spirits { margin: 3rem 0; }
+.spirits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 3.5rem; margin-top: 1.2rem; }
+.menu-grid-secondary { margin-top: 3rem; }
+
 .menu-subtitle { color: var(--gold); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; margin: 0 0 .3rem; }
 
 .menu-highlight {
@@ -762,6 +766,7 @@ a { color: inherit; }
   .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-media { max-width: 380px; margin: 0 auto; }
   .menu-grid { grid-template-columns: 1fr; }
+  .spirits-grid { grid-template-columns: 1fr; gap: 0; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
   .location-grid { grid-template-columns: 1fr; }
   .stat-band-inner { justify-content: flex-start; text-align: left; }
