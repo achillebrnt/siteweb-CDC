@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+Sitemap: https://achillebrnt.github.io/siteweb-CDC/sitemap.xml

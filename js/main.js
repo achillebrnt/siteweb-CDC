@@ -141,7 +141,8 @@ if (eventsList) {
     'Spécial': '#9b7fd4',
   };
   const DEFAULT_CATEGORY_COLOR = '#8a7a68';
-  const PLACEHOLDER_ICON = '<svg class="event-placeholder-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>';
+  const PLACEHOLDER_ICON = '<svg class="event-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 4h12l-1.4 15.2a1.6 1.6 0 0 1-1.6 1.4H9a1.6 1.6 0 0 1-1.6-1.4L6 4z" stroke-linejoin="round" stroke-linecap="round"/><path d="M7.3 10.5h9.4" stroke-linecap="round"/></svg>';
+  const emptyStateHtml = eventsList.innerHTML;
 
   const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -169,6 +170,8 @@ if (eventsList) {
     window.addEventListener('resize', updateEventsNavState);
   }
 
+  eventsList.innerHTML = '<p class="events-loading">Chargement des événements...</p>';
+
   fetch('data/events.json', { cache: 'no-store' })
     .then((res) => (res.ok ? res.json() : []))
     .then((events) => {
@@ -178,7 +181,10 @@ if (eventsList) {
         .filter((ev) => ev.date && new Date(`${ev.date}T00:00:00`) >= today)
         .sort((a, b) => a.date.localeCompare(b.date));
 
-      if (upcoming.length === 0) return;
+      if (upcoming.length === 0) {
+        eventsList.innerHTML = emptyStateHtml;
+        return;
+      }
 
       eventsList.innerHTML = upcoming.map((ev, index) => {
         const d = new Date(`${ev.date}T00:00:00`);
@@ -204,5 +210,7 @@ if (eventsList) {
 
       requestAnimationFrame(updateEventsNavState);
     })
-    .catch(() => {});
+    .catch(() => {
+      eventsList.innerHTML = emptyStateHtml;
+    });
 }

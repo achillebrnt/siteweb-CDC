@@ -156,7 +156,7 @@ function renderAdminEvents(events) {
   adminEventsList.innerHTML = sorted.map((ev) => {
     const d = new Date(`${ev.date}T00:00:00`);
     const accent = CATEGORY_COLORS[ev.tag] || DEFAULT_CATEGORY_COLOR;
-    const meta = [ev.time, ev.tag].filter(Boolean).map(escapeHtml).join(' — ');
+    const meta = [ev.time, ev.tag].filter(Boolean).map(escapeHtml).join(' · ');
     const thumb = ev.photo
       ? `<img class="admin-event-thumb" src="${escapeHtml(ev.photo)}" alt="">`
       : `<span class="admin-event-thumb admin-event-thumb-empty" style="--accent:${accent}"></span>`;
@@ -258,7 +258,7 @@ eventForm.addEventListener('submit', async (e) => {
 
     if (editingId) {
       const idx = events.findIndex((ev) => ev.id === editingId);
-      if (idx === -1) throw new Error("Cet événement n'existe plus — recharge la page.");
+      if (idx === -1) throw new Error("Cet événement n'existe plus. Recharge la page.");
       const updated = { ...events[idx], ...formData, id: editingId };
 
       if (photoFile) {

@@ -109,7 +109,7 @@ a { color: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .hero-bg, .scroll-cue { animation: none !important; }
+  .hero-bg { animation: none !important; }
 }
 
 /* Boutons */
@@ -311,11 +311,6 @@ a { color: inherit; }
   color: var(--gold);
   text-decoration: none;
   font-size: 1.4rem;
-  animation: bob 2s ease-in-out infinite;
-}
-@keyframes bob {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, 8px); }
 }
 
 /* ---- Divider ornament ---- */
@@ -685,14 +680,6 @@ a { color: inherit; }
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.22), transparent 50%),
     linear-gradient(155deg, var(--accent) 0%, rgba(21,17,13,.72) 82%);
 }
-.event-media-placeholder::before {
-  content: "";
-  position: absolute; inset: -30%;
-  background-image: radial-gradient(rgba(255,255,255,.4) 1.4px, transparent 1.4px);
-  background-size: 20px 20px;
-  opacity: .16;
-  transform: rotate(-10deg);
-}
 .event-placeholder-mark {
   position: relative;
   font-family: var(--font-display);
@@ -779,6 +766,20 @@ a { color: inherit; }
 .events-empty p:first-child { color: var(--text); font-size: 1.15rem; font-weight: 600; margin: 0 0 .5rem; }
 .events-empty .btn { margin-top: 1.2rem; }
 
+.events-loading { color: var(--text-muted); padding: 1rem 0; }
+
+/* ---- Page d'erreur (404) ---- */
+.error-page { min-height: 56vh; display: flex; align-items: center; }
+.error-page .container { max-width: 620px; text-align: center; }
+.error-page .hero-actions { justify-content: center; }
+
+/* ---- Pages légales ---- */
+.legal-content { max-width: 720px; margin-top: 1.5rem; color: var(--text-muted); }
+.legal-content h2 { color: var(--gold-light); font-size: 1.1rem; margin: 2rem 0 .6rem; }
+.legal-content p { margin: 0 0 1rem; }
+.legal-content a { color: var(--gold-light); }
+.legal-updated { margin-top: 2.5rem; font-size: .85rem; opacity: .8; }
+
 /* ---- Footer ---- */
 .site-footer {
   background: var(--bg);
@@ -793,6 +794,9 @@ a { color: inherit; }
 .footer-logo span { font-family: var(--font-body); font-size: .62rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin-left: .6rem; }
 .footer-social { justify-content: center; margin: 0 0 1.6rem; }
 .footer-inner p:last-child { margin: .3em 0 0; }
+.footer-legal { font-size: .8rem; }
+.footer-legal a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+.footer-legal a:hover { color: var(--gold-light); }
 
 /* ---- Mobile sticky CTA ---- */
 .mobile-cta { display: none; }
