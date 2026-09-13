@@ -24,5 +24,14 @@
     "tag": "Soirée à thème",
     "title": "Soiree des beau gosses",
     "description": ""
+  },
+  {
+    "id": "mu0d0pgl",
+    "date": "2026-11-21",
+    "time": "20h15",
+    "tag": "Spécial",
+    "title": "SOIREE RUGBY FINAL COUPE DU MONDE",
+    "description": "Venez voir la final de la coupe du monde !",
+    "photo": "images/evenements/mu0d0pgl.jpg"
   }
 ]
