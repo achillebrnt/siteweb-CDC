@@ -49,6 +49,7 @@
     </div>
 
     <form id="event-form">
+      <input type="hidden" id="ev-id" value="">
       <label>Date
         <input type="date" id="ev-date" required>
       </label>
@@ -74,7 +75,14 @@
       <label>Photo (facultatif)
         <input type="file" id="ev-photo" accept="image/*">
       </label>
-      <button type="submit" class="btn btn-primary">Publier l'événement</button>
+      <div id="ev-current-photo" class="admin-current-photo" hidden>
+        <img id="ev-current-photo-img" src="" alt="Photo actuelle">
+        <label class="admin-checkbox-label"><input type="checkbox" id="ev-remove-photo"> Supprimer la photo actuelle</label>
+      </div>
+      <div class="admin-form-actions">
+        <button type="submit" class="btn btn-primary" id="event-submit-btn">Publier l'événement</button>
+        <button type="button" class="btn btn-ghost" id="event-cancel-btn" hidden>Annuler la modification</button>
+      </div>
     </form>
     <p id="event-status" hidden></p>
 

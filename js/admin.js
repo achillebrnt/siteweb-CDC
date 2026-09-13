@@ -15,6 +15,21 @@ const eventForm = document.getElementById('event-form');
 const eventStatus = document.getElementById('event-status');
 const adminEventsList = document.getElementById('admin-events-list');
 
+const evIdInput = document.getElementById('ev-id');
+const evDateInput = document.getElementById('ev-date');
+const evTimeInput = document.getElementById('ev-time');
+const evTagInput = document.getElementById('ev-tag');
+const evTitleInput = document.getElementById('ev-title');
+const evDescInput = document.getElementById('ev-desc');
+const evPhotoInput = document.getElementById('ev-photo');
+const currentPhotoBlock = document.getElementById('ev-current-photo');
+const currentPhotoImg = document.getElementById('ev-current-photo-img');
+const removePhotoCheckbox = document.getElementById('ev-remove-photo');
+const submitBtn = document.getElementById('event-submit-btn');
+const cancelBtn = document.getElementById('event-cancel-btn');
+
+let currentEvents = [];
+
 const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 const CATEGORY_COLORS = {
   'Soirée à thème': 'var(--gold)',
@@ -93,6 +108,13 @@ async function uploadEventPhoto(token, file, eventId) {
   const base64 = await resizeImage(file);
   const path = `images/evenements/${eventId}.jpg`;
   const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
+
+  let sha;
+  const getRes = await fetch(`${url}?ref=${BRANCH}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+  });
+  if (getRes.ok) { sha = (await getRes.json()).sha; }
+
   const res = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -100,7 +122,7 @@ async function uploadEventPhoto(token, file, eventId) {
       Accept: 'application/vnd.github+json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ message: `Ajoute la photo de l'événement ${eventId}`, content: base64, branch: BRANCH }),
+    body: JSON.stringify({ message: `Ajoute/remplace la photo de l'événement ${eventId}`, content: base64, sha, branch: BRANCH }),
   });
   if (!res.ok) throw new Error("L'envoi de la photo a échoué.");
   return path;
@@ -125,6 +147,7 @@ async function deleteEventPhoto(token, path) {
 }
 
 function renderAdminEvents(events) {
+  currentEvents = events;
   const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
   if (sorted.length === 0) {
     adminEventsList.innerHTML = '<p class="admin-empty">Aucun événement publié pour l’instant.</p>';
@@ -145,10 +168,43 @@ function renderAdminEvents(events) {
           <strong>${escapeHtml(ev.title)}</strong>
           <span><span class="admin-category-dot"></span>${meta}</span>
         </div>
-        <button type="button" class="btn btn-danger admin-delete" data-id="${ev.id}">Supprimer</button>
+        <div class="admin-event-actions">
+          <button type="button" class="btn btn-ghost admin-edit" data-id="${ev.id}">Modifier</button>
+          <button type="button" class="btn btn-danger admin-delete" data-id="${ev.id}">Supprimer</button>
+        </div>
       </div>`;
   }).join('');
 }
+
+function resetFormToAddMode() {
+  eventForm.reset();
+  evIdInput.value = '';
+  currentPhotoBlock.hidden = true;
+  submitBtn.textContent = "Publier l'événement";
+  cancelBtn.hidden = true;
+}
+
+function enterEditMode(ev) {
+  evIdInput.value = ev.id;
+  evDateInput.value = ev.date || '';
+  evTimeInput.value = ev.time || '';
+  evTagInput.value = ev.tag || 'Autre';
+  evTitleInput.value = ev.title || '';
+  evDescInput.value = ev.description || '';
+  evPhotoInput.value = '';
+  removePhotoCheckbox.checked = false;
+  if (ev.photo) {
+    currentPhotoImg.src = ev.photo;
+    currentPhotoBlock.hidden = false;
+  } else {
+    currentPhotoBlock.hidden = true;
+  }
+  submitBtn.textContent = 'Enregistrer les modifications';
+  cancelBtn.hidden = false;
+  eventForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+cancelBtn.addEventListener('click', resetFormToAddMode);
 
 async function loadPanel(token) {
   const { events } = await fetchEventsFile(token);
@@ -183,37 +239,65 @@ eventForm.addEventListener('submit', async (e) => {
   const token = localStorage.getItem(TOKEN_KEY);
   if (!token) return;
 
-  const submitBtn = eventForm.querySelector('button[type="submit"]');
+  const editingId = evIdInput.value;
   submitBtn.disabled = true;
   eventStatus.hidden = true;
 
-  const newEvent = {
-    id: Date.now().toString(36),
-    date: document.getElementById('ev-date').value,
-    time: document.getElementById('ev-time').value.trim(),
-    tag: document.getElementById('ev-tag').value.trim(),
-    title: document.getElementById('ev-title').value.trim(),
-    description: document.getElementById('ev-desc').value.trim(),
+  const formData = {
+    date: evDateInput.value,
+    time: evTimeInput.value.trim(),
+    tag: evTagInput.value,
+    title: evTitleInput.value.trim(),
+    description: evDescInput.value.trim(),
   };
-  const photoFile = document.getElementById('ev-photo').files[0];
+  const photoFile = evPhotoInput.files[0];
+  const removePhoto = removePhotoCheckbox.checked;
 
   try {
-    if (photoFile) {
-      eventStatus.textContent = 'Envoi de la photo...';
-      eventStatus.className = 'admin-status';
-      eventStatus.hidden = false;
-      newEvent.photo = await uploadEventPhoto(token, photoFile, newEvent.id);
-    }
-
-    eventStatus.textContent = 'Publication de l\'événement...';
-    eventStatus.hidden = false;
     const { events, sha } = await fetchEventsFile(token);
-    events.push(newEvent);
-    await saveEventsFile(token, events, sha, `Ajoute l'événement : ${newEvent.title}`);
-    renderAdminEvents(events);
-    eventForm.reset();
-    eventStatus.textContent = 'Publié ! Il sera visible sur le site dans une minute environ.';
-    eventStatus.className = 'admin-status';
+
+    if (editingId) {
+      const idx = events.findIndex((ev) => ev.id === editingId);
+      if (idx === -1) throw new Error("Cet événement n'existe plus — recharge la page.");
+      const updated = { ...events[idx], ...formData, id: editingId };
+
+      if (photoFile) {
+        eventStatus.textContent = 'Envoi de la photo...';
+        eventStatus.className = 'admin-status';
+        eventStatus.hidden = false;
+        updated.photo = await uploadEventPhoto(token, photoFile, editingId);
+      } else if (removePhoto && events[idx].photo) {
+        await deleteEventPhoto(token, events[idx].photo).catch(() => {});
+        delete updated.photo;
+      }
+
+      events[idx] = updated;
+      eventStatus.textContent = 'Mise à jour en cours...';
+      eventStatus.hidden = false;
+      await saveEventsFile(token, events, sha, `Modifie l'événement : ${updated.title}`);
+      renderAdminEvents(events);
+      resetFormToAddMode();
+      eventStatus.textContent = 'Modifications enregistrées !';
+      eventStatus.className = 'admin-status';
+    } else {
+      const newEvent = { id: Date.now().toString(36), ...formData };
+
+      if (photoFile) {
+        eventStatus.textContent = 'Envoi de la photo...';
+        eventStatus.className = 'admin-status';
+        eventStatus.hidden = false;
+        newEvent.photo = await uploadEventPhoto(token, photoFile, newEvent.id);
+      }
+
+      events.push(newEvent);
+      eventStatus.textContent = "Publication de l'événement...";
+      eventStatus.hidden = false;
+      await saveEventsFile(token, events, sha, `Ajoute l'événement : ${newEvent.title}`);
+      renderAdminEvents(events);
+      resetFormToAddMode();
+      eventStatus.textContent = 'Publié ! Il sera visible sur le site dans une minute environ.';
+      eventStatus.className = 'admin-status';
+    }
   } catch (err) {
     eventStatus.textContent = err.message || 'Erreur lors de la publication.';
     eventStatus.className = 'admin-error';
@@ -224,11 +308,20 @@ eventForm.addEventListener('submit', async (e) => {
 });
 
 adminEventsList.addEventListener('click', async (e) => {
+  const editBtn = e.target.closest('.admin-edit');
+  if (editBtn) {
+    const ev = currentEvents.find((item) => item.id === editBtn.dataset.id);
+    if (ev) enterEditMode(ev);
+    return;
+  }
+
   const btn = e.target.closest('.admin-delete');
   if (!btn) return;
   const token = localStorage.getItem(TOKEN_KEY);
   if (!token) return;
   if (!confirm('Supprimer cet événement ?')) return;
+
+  if (btn.dataset.id === evIdInput.value) resetFormToAddMode();
 
   btn.disabled = true;
   try {

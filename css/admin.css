@@ -40,6 +40,13 @@ textarea { resize: vertical; }
 select { cursor: pointer; }
 input[type="file"] { padding: .5rem; color: var(--text-muted); font-size: .88rem; }
 
+.admin-current-photo { display: flex; align-items: center; gap: .9rem; }
+.admin-current-photo img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.admin-checkbox-label { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--text-muted); cursor: pointer; }
+.admin-checkbox-label input { width: auto; padding: 0; }
+
+.admin-form-actions { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; }
+
 .admin-error { color: #ff8b87; margin: .8rem 0 0; font-size: .9rem; }
 .admin-status { color: var(--teal-light); margin: .8rem 0 0; font-size: .9rem; }
 
@@ -71,6 +78,8 @@ input[type="file"] { padding: .5rem; color: var(--text-muted); font-size: .88rem
   background: var(--bg);
 }
 .admin-event-thumb-empty { background: linear-gradient(135deg, var(--accent), transparent); }
+
+.admin-event-actions { display: flex; gap: .5rem; flex-shrink: 0; }
 
 .btn-danger { background: transparent; border: 1px solid #b3413f; color: #ff8b87; flex-shrink: 0; }
 .btn-danger:hover { background: rgba(179,65,63,0.15); }

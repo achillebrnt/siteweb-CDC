@@ -177,6 +177,10 @@ if (!prefersReducedMotion) {
 // Événements : chargés depuis data/events.json (géré via admin.html)
 const eventsList = document.getElementById('events-list');
 if (eventsList) {
+  const eventsNavGroup = document.querySelector('.events-nav-group');
+  const eventsPrevBtn = document.querySelector('.events-prev');
+  const eventsNextBtn = document.querySelector('.events-next');
+
   const monthNames = ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
   const CATEGORY_COLORS = {
     'Soirée à thème': 'var(--gold)',
@@ -186,11 +190,33 @@ if (eventsList) {
     'Spécial': '#9b7fd4',
   };
   const DEFAULT_CATEGORY_COLOR = '#8a7a68';
-  const SPARKLE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>';
+  const PLACEHOLDER_ICON = '<svg class="event-placeholder-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>';
 
   const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
+
+  function updateEventsNavState() {
+    if (!eventsNavGroup) return;
+    const canScroll = eventsList.scrollWidth > eventsList.clientWidth + 4;
+    eventsNavGroup.hidden = !canScroll;
+    if (!canScroll) return;
+    const maxScroll = eventsList.scrollWidth - eventsList.clientWidth;
+    eventsPrevBtn.disabled = eventsList.scrollLeft <= 4;
+    eventsNextBtn.disabled = eventsList.scrollLeft >= maxScroll - 4;
+  }
+
+  if (eventsPrevBtn && eventsNextBtn) {
+    const scrollByCard = (dir) => {
+      const card = eventsList.querySelector('.event-card');
+      const amount = card ? card.getBoundingClientRect().width + 22 : 300;
+      eventsList.scrollBy({ left: dir * amount, behavior: 'smooth' });
+    };
+    eventsPrevBtn.addEventListener('click', () => scrollByCard(-1));
+    eventsNextBtn.addEventListener('click', () => scrollByCard(1));
+    eventsList.addEventListener('scroll', updateEventsNavState, { passive: true });
+    window.addEventListener('resize', updateEventsNavState);
+  }
 
   fetch('data/events.json', { cache: 'no-store' })
     .then((res) => (res.ok ? res.json() : []))
@@ -206,27 +232,26 @@ if (eventsList) {
       eventsList.innerHTML = upcoming.map((ev, index) => {
         const d = new Date(`${ev.date}T00:00:00`);
         const accent = CATEGORY_COLORS[ev.tag] || DEFAULT_CATEGORY_COLOR;
-        const isFeatured = index === 0;
+        const meta = `${d.getDate()} ${monthNames[d.getMonth()]}${ev.time ? ` · ${escapeHtml(ev.time)}` : ''}`;
         const media = ev.photo
           ? `<img src="${escapeHtml(ev.photo)}" alt="${escapeHtml(ev.title || '')}" loading="lazy">`
-          : `<div class="event-media-placeholder">${SPARKLE_ICON}</div>`;
+          : `<div class="event-media-placeholder"><span class="event-placeholder-mark">CDC</span>${PLACEHOLDER_ICON}</div>`;
         return `
-          <article class="event-card reveal is-visible${isFeatured ? ' event-card-featured' : ''}" style="--accent:${accent}">
+          <article class="event-card reveal is-visible" style="--accent:${accent}">
             <div class="event-media">
               ${media}
               ${ev.tag ? `<span class="event-tag">${escapeHtml(ev.tag)}</span>` : ''}
+              ${index === 0 ? '<span class="event-featured-label">Bientôt</span>' : ''}
             </div>
             <div class="event-body">
-              <div class="event-date"><span class="event-day">${d.getDate()}</span><span class="event-month">${monthNames[d.getMonth()]}</span></div>
-              <div class="event-info">
-                ${isFeatured ? '<span class="event-featured-label">Prochain événement</span>' : ''}
-                <h3>${escapeHtml(ev.title || '')}</h3>
-                ${ev.description ? `<p>${escapeHtml(ev.description)}</p>` : ''}
-                ${ev.time ? `<span class="event-time">${escapeHtml(ev.time)}</span>` : ''}
-              </div>
+              <p class="event-meta">${meta}</p>
+              <h3>${escapeHtml(ev.title || '')}</h3>
+              ${ev.description ? `<p class="event-desc">${escapeHtml(ev.description)}</p>` : ''}
             </div>
           </article>`;
       }).join('');
+
+      requestAnimationFrame(updateEventsNavState);
     })
     .catch(() => {});
 }
