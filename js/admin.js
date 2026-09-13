@@ -27,6 +27,39 @@ const currentPhotoImg = document.getElementById('ev-current-photo-img');
 const removePhotoCheckbox = document.getElementById('ev-remove-photo');
 const submitBtn = document.getElementById('event-submit-btn');
 const cancelBtn = document.getElementById('event-cancel-btn');
+const formCard = document.querySelector('.admin-card-form');
+const formTitle = document.getElementById('event-form-title');
+const formMode = document.getElementById('event-form-mode');
+const formHint = document.getElementById('event-form-hint');
+const datePreview = document.getElementById('ev-date-preview');
+const countBadge = document.getElementById('admin-count');
+
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+});
+
+// La date choisie est réaffichée en toutes lettres, pour éviter les erreurs de saisie
+function updateDatePreview() {
+  const value = evDateInput.value;
+  if (!value) {
+    datePreview.hidden = true;
+    datePreview.textContent = '';
+    return;
+  }
+  const d = new Date(`${value}T00:00:00`);
+  datePreview.textContent = dateFormatter.format(d);
+  datePreview.hidden = false;
+}
+
+evDateInput.addEventListener('change', updateDatePreview);
+evDateInput.addEventListener('input', updateDatePreview);
+
+// Un clic n'importe où dans le champ ouvre le calendrier
+evDateInput.addEventListener('click', () => {
+  if (typeof evDateInput.showPicker === 'function') {
+    try { evDateInput.showPicker(); } catch (err) { /* le navigateur gère lui-même */ }
+  }
+});
 
 let currentEvents = [];
 
@@ -149,6 +182,9 @@ async function deleteEventPhoto(token, path) {
 function renderAdminEvents(events) {
   currentEvents = events;
   const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
+  countBadge.textContent = sorted.length === 0
+    ? 'Aucun'
+    : `${sorted.length} ${sorted.length > 1 ? 'événements' : 'événement'}`;
   if (sorted.length === 0) {
     adminEventsList.innerHTML = '<p class="admin-empty">Aucun événement publié pour l’instant.</p>';
     return;
@@ -182,6 +218,11 @@ function resetFormToAddMode() {
   currentPhotoBlock.hidden = true;
   submitBtn.textContent = "Publier l'événement";
   cancelBtn.hidden = true;
+  formTitle.textContent = 'Nouvel événement';
+  formMode.textContent = 'Ajout';
+  formHint.textContent = "Une fois publié, l'événement apparaît sur la page d'accueil.";
+  formCard.classList.remove('is-editing');
+  updateDatePreview();
 }
 
 function enterEditMode(ev) {
@@ -201,7 +242,12 @@ function enterEditMode(ev) {
   }
   submitBtn.textContent = 'Enregistrer les modifications';
   cancelBtn.hidden = false;
-  eventForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  formTitle.textContent = "Modifier l'événement";
+  formMode.textContent = 'Modification';
+  formHint.textContent = "Tu modifies un événement déjà en ligne. Le changement est visible dès l'enregistrement.";
+  formCard.classList.add('is-editing');
+  updateDatePreview();
+  formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 cancelBtn.addEventListener('click', resetFormToAddMode);

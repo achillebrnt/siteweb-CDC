@@ -45,53 +45,75 @@
     <p id="login-error" class="admin-error" hidden></p>
   </section>
 
-  <section id="admin-panel" class="admin-card" hidden>
-    <div class="admin-panel-head">
-      <h2>Nouvel événement</h2>
+  <div id="admin-panel" hidden>
+
+    <div class="admin-bar">
+      <p class="admin-bar-status">Session ouverte sur ce navigateur</p>
       <button id="logout-btn" class="btn btn-ghost" type="button">Déconnexion</button>
     </div>
 
-    <form id="event-form">
-      <input type="hidden" id="ev-id" value="">
-      <label>Date
-        <input type="date" id="ev-date" required>
-      </label>
-      <label>Heure
-        <input type="text" id="ev-time" placeholder="Ex : 20h">
-      </label>
-      <label>Catégorie
-        <select id="ev-tag">
-          <option value="Soirée à thème">Soirée à thème</option>
-          <option value="Concert / Live">Concert / Live</option>
-          <option value="DJ Set">DJ Set</option>
-          <option value="Happy Hour">Happy Hour</option>
-          <option value="Spécial">Spécial</option>
-          <option value="Autre">Autre</option>
-        </select>
-      </label>
-      <label>Titre
-        <input type="text" id="ev-title" required>
-      </label>
-      <label>Description
-        <textarea id="ev-desc" rows="3" placeholder="Courte description (facultatif)"></textarea>
-      </label>
-      <label>Photo (facultatif)
-        <input type="file" id="ev-photo" accept="image/*">
-      </label>
-      <div id="ev-current-photo" class="admin-current-photo" hidden>
-        <img id="ev-current-photo-img" src="" alt="Photo actuelle">
-        <label class="admin-checkbox-label"><input type="checkbox" id="ev-remove-photo"> Supprimer la photo actuelle</label>
+    <section class="admin-card admin-card-form">
+      <div class="admin-card-head">
+        <h2 id="event-form-title">Nouvel événement</h2>
+        <span class="admin-card-tag" id="event-form-mode">Ajout</span>
       </div>
-      <div class="admin-form-actions">
-        <button type="submit" class="btn btn-primary" id="event-submit-btn">Publier l'événement</button>
-        <button type="button" class="btn btn-ghost" id="event-cancel-btn" hidden>Annuler la modification</button>
-      </div>
-    </form>
-    <p id="event-status" hidden></p>
+      <p class="admin-card-hint" id="event-form-hint">Une fois publié, l'événement apparaît sur la page d'accueil.</p>
 
-    <h2 class="admin-list-title">Événements publiés</h2>
-    <div id="admin-events-list" class="admin-events-list"></div>
-  </section>
+      <form id="event-form">
+        <input type="hidden" id="ev-id" value="">
+
+        <div class="admin-field-row">
+          <label class="admin-field">Date
+            <input type="date" id="ev-date" required>
+          </label>
+          <label class="admin-field">Heure
+            <input type="text" id="ev-time" placeholder="20h30" autocomplete="off">
+          </label>
+        </div>
+        <p class="admin-date-preview" id="ev-date-preview" hidden></p>
+
+        <label class="admin-field">Catégorie
+          <select id="ev-tag">
+            <option value="Soirée à thème">Soirée à thème</option>
+            <option value="Concert / Live">Concert / Live</option>
+            <option value="DJ Set">DJ Set</option>
+            <option value="Happy Hour">Happy Hour</option>
+            <option value="Spécial">Spécial</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </label>
+        <label class="admin-field">Titre
+          <input type="text" id="ev-title" required>
+        </label>
+        <label class="admin-field">Description
+          <textarea id="ev-desc" rows="3" placeholder="Courte description (facultatif)"></textarea>
+        </label>
+        <label class="admin-field">Photo (facultatif)
+          <input type="file" id="ev-photo" accept="image/*">
+        </label>
+
+        <div id="ev-current-photo" class="admin-current-photo" hidden>
+          <img id="ev-current-photo-img" src="" alt="Photo actuelle">
+          <label class="admin-checkbox-label"><input type="checkbox" id="ev-remove-photo"> Supprimer la photo actuelle</label>
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="submit" class="btn btn-primary" id="event-submit-btn">Publier l'événement</button>
+          <button type="button" class="btn btn-ghost" id="event-cancel-btn" hidden>Annuler la modification</button>
+        </div>
+      </form>
+      <p id="event-status" hidden></p>
+    </section>
+
+    <section class="admin-card admin-card-list">
+      <div class="admin-card-head">
+        <h2>Événements publiés</h2>
+        <span class="admin-card-tag" id="admin-count"></span>
+      </div>
+      <div id="admin-events-list" class="admin-events-list"></div>
+    </section>
+
+  </div>
 </div>
 
 <script src="js/admin.js"></script>
